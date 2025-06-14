@@ -46,7 +46,7 @@ function editProfile(editProfilePopup, nameInput, userName, jobInput, userHobby)
   jobInput.value = userHobby.textContent;
 };
 
-function handleFormSubmit(evt, editProfileForm, userName, nameInput, userHobby, jobInput) {
+function handleCardFormSubmit(evt, editProfileForm, userName, nameInput, userHobby, jobInput) {
   evt.preventDefault();
   const popup = editProfileForm.closest('.popup');
   userName.textContent = nameInput.value;
@@ -84,7 +84,7 @@ function handleSubmit(evt) {
 newCardForm.addEventListener('submit', handleSubmit);
 
 editProfileForm.addEventListener('submit', (evt) => {
-  handleFormSubmit(evt, editProfileForm, userName, nameInput, userHobby, jobInput);
+  handleCardFormSubmit(evt, editProfileForm, userName, nameInput, userHobby, jobInput);
 });
 
 initialCards.forEach(element => {
