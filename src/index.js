@@ -40,11 +40,18 @@ popups.forEach(evt => {
   setupPopupCloseHandlers(evt);
 });
 
-function editProfile(editProfilePopup, nameInput, userName, jobInput, userHobby) {
+initialCards.forEach(element => {
+  const card = createCard(element, deleteCard, likeCard, openFullImage, template);
+  cardContainer.append(card);
+});
+
+function editProfile() {
   openPopup(editProfilePopup);
   nameInput.value = userName.textContent;
   jobInput.value = userHobby.textContent;
 };
+
+editProfileButton.addEventListener('click', editProfile);
 
 function openFullImage(item) {
   fullImagePopup.src = item.link;
@@ -52,6 +59,11 @@ function openFullImage(item) {
   imageCaption.textContent = item.name;
   openPopup(imagePopup);
 };
+
+newCardButton.addEventListener('click', () => {
+  openPopup(newCardPopup);
+  newCardForm.reset();
+});
 
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
@@ -64,7 +76,9 @@ function handleCardFormSubmit(evt) {
   closePopup(newCardForm.closest('.popup'));
 };
 
-function handleUserFormSubmit(evt, editProfileForm, userName, nameInput, userHobby, jobInput) {
+newCardForm.addEventListener('submit', handleCardFormSubmit);
+
+function handleUserFormSubmit(evt) {
   evt.preventDefault();
   const popup = editProfileForm.closest('.popup');
   userName.textContent = nameInput.value;
@@ -72,22 +86,4 @@ function handleUserFormSubmit(evt, editProfileForm, userName, nameInput, userHob
   closePopup(popup);
 };
 
-editProfileButton.addEventListener('click', () => {
-  editProfile(editProfilePopup, nameInput, userName, jobInput, userHobby);
-});
-
-newCardButton.addEventListener('click', () => {
-  openPopup(newCardPopup);
-  newCardForm.reset();
-});
-
-newCardForm.addEventListener('submit', handleCardFormSubmit);
-
-editProfileForm.addEventListener('submit', (evt) => {
-  handleUserFormSubmit(evt, editProfileForm, userName, nameInput, userHobby, jobInput);
-});
-
-initialCards.forEach(element => {
-  const card = createCard(element, deleteCard, likeCard, openFullImage, template);
-  cardContainer.append(card);
-});
+editProfileForm.addEventListener('submit', handleUserFormSubmit);
