@@ -1,3 +1,12 @@
+function handleEscapeKey(evt) {
+  if (evt.key === 'Escape') {
+    const openPopup = document.querySelector('.popup_is-opened');
+    if(openPopup) {
+      closePopup(openPopup);
+    }
+  }
+};
+
 function openPopup(popup) {
   popup.classList.add('popup_is-opened');
   document.addEventListener('keydown', handleEscapeKey);
@@ -6,15 +15,6 @@ function openPopup(popup) {
 function closePopup(popup) {
   popup.classList.remove('popup_is-opened');
   document.removeEventListener('keydown', handleEscapeKey);
-};
-
-function handleEscapeKey(element) {
-  if (element.key === 'Escape') {
-    const openPopup = document.querySelector('.popup_is-opened');
-    if(openPopup) {
-      closePopup(openPopup);
-    }
-  }
 };
 
 function setupPopupCloseHandlers(element) {
