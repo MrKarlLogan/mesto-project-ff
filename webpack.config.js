@@ -17,7 +17,10 @@ module.exports = {
     static: path.resolve(__dirname, './dist'),
     open: true,
     compress: true,
-    port: 8080
+    port: 8080,
+    hot: true,
+    liveReload: true,
+    watchFiles: ['src/**/*.html']
   },
   module: {
     rules: [{
@@ -47,7 +50,6 @@ module.exports = {
       template: './src/index.html'
     }),
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin(),
-
+    new MiniCssExtractPlugin()
   ]
 }
