@@ -21,3 +21,7 @@
 .popup__close:hover {
   opacity: 0.6;
 }
+
+.popup__error_visible {
+  color: red;
+}
