@@ -132,9 +132,7 @@ function handleCardFormSubmit(evt) {
     })
     .catch(error => console.log(`Ошибка создания карточки: ${error}`))
     .finally(() => {
-      setTimeout(() => {
-        setButtonLoadingState(submitButton, false);
-      }, 1000);
+      setButtonLoadingState(submitButton, false);
     });
 };
 
@@ -152,9 +150,7 @@ function handleUserFormSubmit(evt) {
     })
     .catch(error => console.log(`Ошибка изменения данных пользователя: ${error}`))
     .finally(() => {
-      setTimeout(() => {
-        setButtonLoadingState(submitButton, false);
-      }, 1000)
+      setButtonLoadingState(submitButton, false);
     });
 };
 
@@ -186,8 +182,6 @@ avatarForm.addEventListener('submit', evt => {
     })
     .catch(error => console.log(`Ошибка сохранения аватара: ${error}`))
     .finally(() => {
-      setTimeout(() => {
-        setButtonLoadingState(submitButton, false);
-      }, 1000);
+      setButtonLoadingState(submitButton, false);
     });
 });

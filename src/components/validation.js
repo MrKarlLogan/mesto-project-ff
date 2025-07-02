@@ -18,33 +18,31 @@ function hasInvalidInput(inputList) {
   })
 };
 
+function disableSubmitButton(button, config) {
+  button.disabled = true;
+  button.classList.add(config.inactiveButtonClass);
+};
+
+function enableSubmitButton(button, config) {
+  button.disabled = false;
+  button.classList.remove(config.inactiveButtonClass);
+};
+
 function toggleButtonState(inputList, buttonElement, validationConfig) {
   if(hasInvalidInput(inputList)) {
-    buttonElement.disabled = true;
-    buttonElement.classList.add(validationConfig.inactiveButtonClass);
+    disableSubmitButton(buttonElement, validationConfig);
   } else {
-    buttonElement.disabled = false;
-    buttonElement.classList.remove(validationConfig.inactiveButtonClass); 
-  }
-}
+    enableSubmitButton(buttonElement, validationConfig);
+  };
+};
 
 function isValid(formElement, inputElement, validationConfig) {
   inputElement.setCustomValidity('');
-  if(inputElement.value && inputElement.type === 'text') {
-    const regex = /^[а-яА-ЯёЁa-zA-Z\s-]+$/;
-    if(!regex.test(inputElement.value)) {
-      inputElement.setCustomValidity(inputElement.dataset.errorMessage);
-    } else {
-      inputElement.setCustomValidity('');
-    }
-  } else if(inputElement.value && inputElement.type === 'url') {
-    const regexUrl = /^https?:\/\/[^\s]+$/;
-    if(!regexUrl.test(inputElement.value)) {
-      inputElement.setCustomValidity(inputElement.dataset.errorMessage);
-    } else {
-      inputElement.setCustomValidity('');
-    }
-  }
+  if(inputElement.type === 'text' && inputElement.validity.patternMismatch) {
+    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
+  } else {
+    inputElement.setCustomValidity('');
+  };
   if(!inputElement.validity.valid) {
     showInputError(formElement, inputElement, inputElement.validationMessage, validationConfig);
   } else {
@@ -57,18 +55,18 @@ function setEventListeners(formElement, validationConfig) {
   const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
   inputList.forEach(inputElement => {
     inputElement.addEventListener('input', () => {
-      isValid(formElement, inputElement, validationConfig)
-      toggleButtonState(inputList, buttonElement, validationConfig)
-    })
-  })
-}
+      isValid(formElement, inputElement, validationConfig);
+      toggleButtonState(inputList, buttonElement, validationConfig);
+    });
+  });
+};
 
 function enableValidation(validationConfig) {
   const formList = Array.from(document.querySelectorAll(validationConfig.formSelector));
   formList.forEach(formElement => {
     setEventListeners(formElement, validationConfig);
-  })
-}
+  });
+};
 
 function clearValidation(profileForm, validationConfig) {
   const inputList = Array.from(profileForm.querySelectorAll(validationConfig.inputSelector));
@@ -77,9 +75,8 @@ function clearValidation(profileForm, validationConfig) {
     inputElement.setCustomValidity('');
     hideInputError(profileForm, inputElement, validationConfig);
   });
-  buttonElement.disabled = true;
-  buttonElement.classList.add(validationConfig.inactiveButtonClass); 
-}
+  disableSubmitButton(buttonElement, validationConfig);
+};
 
 export {
   enableValidation,

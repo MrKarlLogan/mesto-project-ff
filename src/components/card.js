@@ -4,54 +4,38 @@ import {
 } from './modal.js';
 
 import {
-  config
+  fetchDeleteCard,
+  fetchLikeCard
 } from './api.js';
-
-let handleDelete = null;
 
 function deleteCard(cardElement, cardId) {
   const deletePopup = document.querySelector('.popup_type_delete');
   const deletePopupButton = deletePopup.querySelector('.popup__button');
-  if(handleDelete) {
-    deletePopupButton.removeEventListener('click', handleDelete);
-  }
-  handleDelete = () => {
-    fetch(`${config.baseUrl}/cards/${cardId}`, {
-      method: 'DELETE',
-      headers: config.headers
-    })
-    .then(() => {
-      cardElement.closest('.places__item').remove();
-      closePopup(deletePopup);
-      deletePopupButton.removeEventListener('click', handleDelete);
-    })
-    .catch(error => {
-      console.log(`Не удалось удалить карточку: ${error}`);
-      closePopup(deletePopup);
-      deletePopupButton.removeEventListener('click', handleDelete);
-    });
-  }
-  deletePopupButton.addEventListener('click', handleDelete);
+  deletePopupButton.onclick = () => {
+    fetchDeleteCard(cardId)
+      .then(() => {
+        cardElement.closest('.places__item').remove();
+        closePopup(deletePopup);
+        deletePopupButton.onclick = null;
+      })
+      .catch(error => {
+        console.log(`Не удалось удалить карточку: ${error}`);
+        closePopup(deletePopup);
+        deletePopupButton.onclick = null;
+      });
+  };
   openPopup(deletePopup);
 };
 
 function likeCard(likeButton, cardId, likeCounter) {
   const isLiked = likeButton.classList.contains('card__like-button_is-active');
 
-  fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
-    method: isLiked ? 'DELETE' : 'PUT',
-    headers: config.headers
-  })
-  .then(res => {
-    if(res.ok) {
-      return res.json()
-    }
-  })
-  .then(data => {
-    likeButton.classList.toggle('card__like-button_is-active');
-    likeCounter.textContent = data.likes.length;
-  })
-  .catch(error => console.log(`Не удалось поставить лайк: ${error}`));
+  fetchLikeCard(cardId, isLiked)
+    .then(data => {
+      likeButton.classList.toggle('card__like-button_is-active');
+      likeCounter.textContent = data.likes.length;
+    })
+    .catch(error => console.log(`Не удалось поставить лайк: ${error}`));
 };
 
 function createCard(item, deleteCard, likeCard, openFullImage, template, userId) {
@@ -67,19 +51,20 @@ function createCard(item, deleteCard, likeCard, openFullImage, template, userId)
   likeCounter.textContent = item.likes.length;
   if(item.owner._id !== userId) {
     deleteButton.remove();
+  } else {
+    deleteButton.addEventListener('click', evt => {
+      deleteCard(evt.target, item._id)
+    });
   }
   const isLiked = item.likes.some(like => like._id === userId);
   if(isLiked) {
     likeButton.classList.add('card__like-button_is-active');
-  };
+  }
   cardLink.addEventListener('click', () => {
     openFullImage(item);
   });
   likeButton.addEventListener('click', () => {
     likeCard(likeButton, item._id, likeCounter)
-  });
-  deleteButton.addEventListener('click', evt => {
-    deleteCard(evt.target, item._id)
   });
   return cardElement;
 };

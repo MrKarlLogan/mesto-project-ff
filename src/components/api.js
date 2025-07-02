@@ -6,15 +6,33 @@ const config = {
   }
 };
 
+const handleResponse = (res) => {
+  if(res.ok) {
+    return res.json()
+  };
+};
+
+const fetchDeleteCard = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/${cardId}`, {
+    method: 'DELETE',
+    headers: config.headers
+  })
+  .then(handleResponse);
+};
+
+const fetchLikeCard = (cardId, isLiked) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: isLiked ? 'DELETE' : 'PUT',
+    headers: config.headers
+  })
+  .then(handleResponse);
+};
+
 const fetchCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers
   })
-  .then(res => {
-    if(res.ok) {
-      return res.json()
-    }
-  })
+  .then(handleResponse)
   .catch(error => console.log(`Не удалось получить массив карточек: ${error}`));
 };
 
@@ -22,11 +40,7 @@ const fetchUserData = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers
   })
-  .then(res => {
-    if(res.ok) {
-      return res.json()
-    }
-  })
+  .then(handleResponse)
   .catch(error => console.log(`Не удалось получить данные пользователя: ${error}`));
 };
 
@@ -39,11 +53,7 @@ const fetchUpdateProfile = (name, about) => {
       about: about
     })
   })
-  .then(res => {
-    if(res.ok) {
-      return res.json()
-    }
-  })
+  .then(handleResponse)
   .catch(error => console.log(`Не удалось обновить данные профиля: ${error}`));
 };
 
@@ -56,11 +66,7 @@ const fetchNewCard = (name, link) => {
       link: link
     })
   })
-  .then(res => {
-    if(res.ok) {
-      return res.json()
-    }
-  })
+  .then(handleResponse)
   .catch(error => console.log(`Не удалось создать карточку: ${error}`));
 };
 
@@ -72,11 +78,7 @@ function updateAvatar(avatarURL) {
       avatar: avatarURL
     })
   })
-  .then(res => {
-    if(res.ok) {
-      return res.json();
-    }
-  })
+  .then(handleResponse)
   .catch(error => console.log(`Не удалось обновить аватар: ${error}`));
 };
 
@@ -86,5 +88,6 @@ export {
   fetchUpdateProfile,
   fetchNewCard,
   updateAvatar,
-  config
+  fetchDeleteCard,
+  fetchLikeCard
 };
